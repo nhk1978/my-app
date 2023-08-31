@@ -65,32 +65,32 @@ const Login = () => {
             }
             {
                 !loginUser &&
-                <div  className='loginContainer'>
-                    <div className='loginDiv'>
-                        <h2>Login Page</h2>
-                        <label className='formLabel'>Username:</label>
-                        <input className='formControl'
-                            type="text"
-                            value={email}
-                            onChange={handleUsernameChange}
-                        />
-                    </div>
-                    <div className='loginDiv'>
-                        <label className='formLabel'>Password:</label>
-                        <input className='formControl'
-                            type="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                    </div>
-                    {error && <div>{error}</div>}
-                    <button className='loginButton' onClick={handleLogin}>Login</button>
-                </div>
-                // <div className="form__wrapper">
-                // <h2 className="page__header">Login</h2>
-                // <LoginForm />
-                // <Link to="/register">Not have an account yet? Create one!</Link>
+                // <div  className='loginContainer'>
+                //     <div className='loginDiv'>
+                //         <h2>Login Page</h2>
+                //         <label className='formLabel'>Username:</label>
+                //         <input className='formControl'
+                //             type="text"
+                //             value={email}
+                //             onChange={handleUsernameChange}
+                //         />
+                //     </div>
+                //     <div className='loginDiv'>
+                //         <label className='formLabel'>Password:</label>
+                //         <input className='formControl'
+                //             type="password"
+                //             value={password}
+                //             onChange={handlePasswordChange}
+                //         />
+                //     </div>
+                //     {error && <div>{error}</div>}
+                //     <button className='loginButton' onClick={handleLogin}>Login</button>
                 // </div>
+                <div className="form__wrapper">
+                <h2 className="page__header">Login</h2>
+                <LoginForm />
+                <Link to="/register">Not have an account yet? Create one!</Link>
+                </div>
             }
         </div>
     );
