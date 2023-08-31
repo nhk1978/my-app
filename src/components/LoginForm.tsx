@@ -9,12 +9,18 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(login({ email, password })).then(() => toast.success("Success log in"));
-    setEmail("");
-    setPassword("");
-  };
+  // const handleLogin = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   dispatch(login({ email, password })).then(() => toast.success("Success log in"));
+  //   setEmail("");
+  //   setPassword("");
+  // };
+  const handleLogin = async (event: React.FormEvent) => {
+    //localStorage.clear()
+    localStorage.setItem("loginUser","")
+    console.log("user: "+ email + " pass: " +password)
+    dispatch(login({ email, password })).then((action) => toast.success("Success log in"))
+};
   return (
     <form className="form">
       <div className="form__section">
