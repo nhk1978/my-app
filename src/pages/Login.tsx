@@ -1,12 +1,13 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect, useMemo, createContext, useContext } from 'react';
 import axios from 'axios';
-import { redirect, useNavigate } from 'react-router-dom';
+import '../assets/styles/styles.scss';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { login } from '../redux/reducers/usersReducer';
 import { User } from '../types/User';
 import useAppDispatch from '../hooks/useAppDispatch';
-import './Login.css'
+import LoginForm from "../components/LoginForm";
 
 
 const Login = () => {
@@ -66,6 +67,7 @@ const Login = () => {
                 !loginUser &&
                 <div  className='loginContainer'>
                     <div className='loginDiv'>
+                        <h2>Login Page</h2>
                         <label className='formLabel'>Username:</label>
                         <input className='formControl'
                             type="text"
@@ -84,6 +86,11 @@ const Login = () => {
                     {error && <div>{error}</div>}
                     <button className='loginButton' onClick={handleLogin}>Login</button>
                 </div>
+                // <div className="form__wrapper">
+                // <h2 className="page__header">Login</h2>
+                // <LoginForm />
+                // <Link to="/register">Not have an account yet? Create one!</Link>
+                // </div>
             }
         </div>
     );

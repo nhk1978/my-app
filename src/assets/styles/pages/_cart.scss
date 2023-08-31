@@ -1,0 +1,102 @@
+@use "../variables/font";
+@use "../variables/colors";
+@use "../mixins/buttons";
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: calc(100vh - 200px);
+
+  &__control-panel {
+    margin: 0 2rem;
+    display: flex;
+    justify-content: space-around;
+    overflow-y: scroll;
+    border: 3px solid colors.$color--grey !important;
+    height: 40vh;
+
+    th {
+      text-align: center !important;
+      border-bottom: 3px solid colors.$color--grey !important;
+      width: 100vw;
+    }
+
+    td {
+      text-align: center;
+    }
+
+    .item__price {
+      font-weight: 500;
+    }
+
+    .item__button {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+    }
+
+    #item__button--remove {
+      button {
+        @include buttons.button(
+          colors.$color--blue,
+          colors.$color--grey,
+          fit-content,
+          1rem
+        );
+      }
+    }
+  }
+
+  &__summary {
+    background: colors.$color--white;
+    padding: 1rem;
+    margin: 1rem;
+
+    &__section {
+      display: flex;
+
+      h4 {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+
+    .cart__button {
+      @include buttons.button(
+        colors.$color--blue,
+        colors.$color--grey,
+        fit-content,
+        1rem
+      );
+    }
+
+    #continue-shopping {
+      background: colors.$color--navy;
+      margin-right: 1rem;
+    }
+  }
+}
+
+.cart--empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: colors.$color--white;
+  height: calc(100vh - 16rem);
+
+  &__button {
+    margin: 1rem 0;
+    @include buttons.button(
+      colors.$color--navy,
+      colors.$color--grey,
+      fit-content,
+      1rem
+    );
+  }
+}

@@ -1,0 +1,46 @@
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  .category {
+    margin: 0.5rem;
+  }
+}
+
+.category-management {
+  padding: 0 2rem;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  &__list {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .category-management__item {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      margin: 0.5rem 0;
+
+      .category-management__buttons {
+        display: flex;
+
+        .form__group {
+          display: flex;
+        }
+
+        .category-management__button {
+          margin: 0 0.4rem;
+        }
+        input {
+          padding: 0.3rem;
+        }
+      }
+    }
+  }
+}

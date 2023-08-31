@@ -1,0 +1,27 @@
+@use "../variables/border";
+@use "../variables/colors";
+@use "../variables/font";
+@use "../variables/animation";
+
+@mixin button($background, $background-hover, $width, $font-size) {
+  border-radius: border.$border-radius;
+  color: colors.$color--white;
+  border: none;
+  padding: 0.2rem 0.4rem;
+  border-radius: border.$border-radius;
+  font-family: font.$primary-font;
+  font-size: $font-size;
+  text-align: center;
+  background: $background;
+  width: $width;
+  height: fit-content;
+  transition: animation.$transition;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background: $background-hover;
+  }
+}

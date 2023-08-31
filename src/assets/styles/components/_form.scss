@@ -1,0 +1,59 @@
+@use "../variables/colors";
+@use "../variables/font";
+@use "../variables/border";
+@use "../mixins/buttons";
+
+.form {
+  margin: 1rem auto;
+  padding: 1rem;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  background: rgba($color: colors.$color--navy, $alpha: 0.4);
+  border-radius: border.$border-radius;
+
+  &__group {
+    input,
+    textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid colors.$color--grey;
+      padding: 1rem;
+      margin: 0.5rem 0;
+
+      &::placeholder {
+        font-family: font.$primary-font;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__button {
+    @include buttons.button(
+      colors.$color--navy,
+      colors.$color--grey,
+      fit-content,
+      1rem
+    );
+    margin-top: 1rem;
+  }
+
+  &--error {
+    font-size: 0.9rem;
+    color: colors.$color--white;
+    padding: 1rem;
+  }
+}
+
+.form--pop-up {
+  position: fixed;
+  width: 50vw;
+  top: 25%;
+  right: 25%;
+  z-index: 10;
+  background: colors.$color--white;
+}

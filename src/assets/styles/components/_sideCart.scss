@@ -1,0 +1,92 @@
+@use "../variables/colors";
+@use "../variables/border";
+@use "../mixins/buttons";
+
+.side-cart {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  &__wrapper {
+    background: colors.$color--white;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 25vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    z-index: 10;
+
+    .side-cart__button--close {
+      @include buttons.button(transparent, transparent, fit-content, 1.5rem);
+      color: colors.$color--navy;
+      width: 100%;
+      display: flex;
+      justify-content: right;
+      padding: 0;
+
+      &:hover {
+        color: colors.$color--red;
+      }
+    }
+
+    .side-cart__content--empty {
+      text-align: center;
+    }
+
+    .side-cart__content {
+      overflow-y: scroll;
+
+      .side-cart__item__wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid colors.$color--grey;
+        margin-bottom: 1rem;
+
+        .side-cart__item {
+          display: flex;
+          flex-direction: column;
+
+          &__title {
+            font-size: 1rem;
+          }
+
+          &__info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .info__quantity {
+              opacity: 0.6;
+              font-size: 0.8rem;
+            }
+
+            .info__sub-total {
+              font-weight: 500;
+              color: colors.$color--navy;
+            }
+          }
+
+          &__button--remove {
+            color: colors.$color--navy;
+            background: transparent;
+          }
+        }
+      }
+    }
+
+    .side-cart__summary {
+      display: flex;
+      justify-content: space-between;
+      background: colors.$color--navy;
+      color: colors.$color--white;
+      padding: 1rem;
+      border-radius: border.$border-radius;
+    }
+  }
+}

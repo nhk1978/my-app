@@ -1,0 +1,14 @@
+@use "../variables/colors";
+@use "../variables/border";
+@use "../variables/font";
+@use "../mixins/buttons";
+
+.pagination {
+  display: flex;
+  margin-top: 3rem;
+
+  &__page-item {
+    list-style: none;
+    margin: 0 0.2rem;
+  }
+}

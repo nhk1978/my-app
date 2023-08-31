@@ -1,0 +1,49 @@
+.body{
+    background-color: #f0f0f0;
+    height: max-content;
+}
+.bodyItems{
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: stretch;   
+    justify-items: center; 
+    flex-wrap: wrap;
+}
+.priceRange{
+    display: flex;
+    /* left: auto; */
+    margin-left: auto;
+    padding: 5px;
+    &input{
+        margin: 10px;
+        width: 200px;
+    }
+}
+.priceLable{
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.selectRange{    
+    display: flex;
+    /* flex: 1; */
+    align-items: center;    
+    position: relative;
+    height: 25px;
+    width: auto;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.optionRange{
+    
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    left: 0;
+    display: flex;
+    width: 100%;
+    z-index: 2;
+}

@@ -1,0 +1,22 @@
+@use "../variables/colors";
+
+.single-review {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 0;
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__email {
+    opacity: 0.6;
+  }
+
+  &__feedback {
+    color: colors.$color--blue;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+}

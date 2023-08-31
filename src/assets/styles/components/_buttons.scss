@@ -1,0 +1,22 @@
+@use "../variables/colors";
+@use "../mixins/buttons";
+
+.fit-button__primary {
+  @include buttons.button(colors.$color--navy, colors.$color--grey, fit-content, 1rem);
+}
+
+.fit-button__secondary {
+  @include buttons.button(colors.$color--blue, colors.$color--red, fit-content, 1rem);
+  &:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+}
+
+.full-width-button__primary {
+  @include buttons.button(colors.$color--cyan, colors.$color--blue, 100%, 1rem);
+}
+
+.full-width-button__secondary {
+  @include buttons.button(colors.$color--blue, colors.$color--red, 100%, 1rem);
+}

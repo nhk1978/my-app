@@ -1,0 +1,49 @@
+@use "./components/header";
+@use "./components/footer";
+@use "./components/pagination";
+@use "./components/productCard";
+@use "./components/singleReview";
+@use "./components/form";
+@use "./components/quantityButton";
+@use "./components/error";
+@use "./components/loader";
+@use "./components/sideCart";
+@use "./components/buttons";
+@use "./components/categories";
+@use "./components/searchBar";
+@use "./pages/productDetail";
+@use "./pages/products";
+@use "./pages/home";
+@use "./pages/checkout";
+@use "./pages/cart";
+@use "./pages/login";
+@use "./pages/userProfile";
+@use "./pages/registration";
+@use "./pages/dashboard";
+@use "./pages/orders";
+@use "./variables/colors";
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.page__header {
+  color: colors.$color--navy;
+  font-size: 1.7rem;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0.6;
+  background: colors.$color--grey;
+  z-index: 1;
+}

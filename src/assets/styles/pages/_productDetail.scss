@@ -1,0 +1,146 @@
+@use "../variables/colors";
+@use "../variables/border";
+@use "../variables/animation";
+@use "../mixins/buttons";
+
+.product__container {
+  padding: 0 2rem;
+
+  .product-details {
+    display: flex;
+    justify-content: space-evenly;
+    height: fit-content;
+    align-items: center;
+
+    &__images {
+      display: flex;
+      flex-direction: column;
+      width: 10%;
+      justify-content: center;
+
+      .product-details__image {
+        margin: 1rem;
+
+        img {
+          width: 100%;
+          transition: animation.$transition;
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+
+    &__image--main img {
+      height: 70vh;
+    }
+
+    &__information {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      &__title,
+      &__price,
+      &__category {
+        margin: 0;
+      }
+
+      &__title {
+        font-size: 2rem;
+        color: colors.$color--navy;
+      }
+
+      &__price,
+      &__category {
+        display: flex;
+        align-items: center;
+
+        h4 {
+          color: colors.$color--blue;
+        }
+
+        p {
+          margin-left: 0.5rem;
+        }
+      }
+
+      &__price {
+        p {
+          font-size: 1.5rem;
+          color: colors.$color--red;
+        }
+      }
+
+      &__category {
+        p {
+          background: colors.$color--grey;
+          padding: 0.2rem 0.4rem;
+          color: colors.$color--white;
+          border-radius: border.$border-radius;
+        }
+      }
+
+      &__button {
+        @include buttons.button(
+          colors.$color--navy,
+          colors.$color--red,
+          100%,
+          1.2rem
+        );
+      }
+    }
+  }
+
+  .product-description {
+    margin-top: 2rem;
+
+    &__tab {
+      padding: 0.3rem;
+      display: flex;
+      border-bottom: 2px solid colors.$color--grey;
+
+      &__header {
+        padding-right: 2rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      &__content {
+        margin: 2rem 1rem;
+      }
+
+      &__review {
+        display: flex;
+        flex-direction: column;
+        margin: 1rem;
+
+        .reviews {
+          max-height: 30vh;
+          overflow-y: scroll;
+          background: colors.$color--white;
+          padding: 0.2rem 1rem;
+        }
+      }
+    }
+
+    .tab__active {
+      color: colors.$color--navy;
+    }
+  }
+
+  .related-products {
+    display: flex;
+    flex-direction: column;
+
+    &__product-cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      padding: 0 2rem;
+    }
+  }
+}

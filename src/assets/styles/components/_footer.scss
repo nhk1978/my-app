@@ -1,0 +1,48 @@
+@use "../variables/colors";
+
+.footer {
+  margin: 2rem;
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+
+  .footer__section {
+    &__content {
+      display: flex;
+
+      .footer__payment {
+        width: 50px;
+      }
+
+      .footer__icon {
+        font-size: 2rem;
+        margin: 0.2rem;
+        color: colors.$color--blue;
+      }
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+
+    &__logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .logo__image {
+        width: 50px;
+      }
+    }
+
+    &__slogan {
+      color: colors.$color--grey;
+    }
+  }
+
+  &__heading {
+    color: colors.$color--navy;
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+}

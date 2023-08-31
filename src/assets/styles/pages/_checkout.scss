@@ -1,0 +1,30 @@
+@use "../variables/colors";
+@use "../variables/border";
+
+.checkout {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2rem;
+  align-items: center;
+
+  .checkout-summary {
+    width: 20vw;
+    background: colors.$color--grey;
+    padding: 1rem;
+    border-radius: border.$border-radius;
+
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      color: colors.$color--white;
+      padding: 0.7rem 0;
+      &__title {
+        font-weight: 500;
+      }
+    }
+
+    #checkout-total {
+      border-top: 1px solid colors.$color--white;
+    }
+  }
+}

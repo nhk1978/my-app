@@ -1,0 +1,85 @@
+@use "../variables/colors";
+@use "../variables/border";
+@use "../variables/animation";
+@use "../mixins/buttons";
+
+.product-card {
+  height: fit-content;
+  min-height: 55vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__image {
+    width: 100%;
+    padding: 10px;
+    transition: animation.$transition;
+
+    &:hover {
+      padding: 0;
+    }
+  }
+
+  &__information {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    border-top: 1px solid colors.$color--grey;
+    padding: 0.4rem 0;
+
+    &__title,
+    &__price,
+    &__description {
+      margin: 0;
+    }
+
+    &__title {
+      color: colors.$color--black;
+      font-size: 0.9rem;
+    }
+
+    &__price {
+      padding: 0.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      width: fit-content;
+      color: colors.$color--blue;
+    }
+
+    &__description {
+      text-align: justify;
+      font-size: 0.7rem;
+      color: colors.$color--grey;
+      max-height: 2rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+    }
+  }
+
+  &__buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+
+    #more-details {
+      @include buttons.button(
+        colors.$color--blue,
+        colors.$color--red,
+        40%,
+        0.8rem
+      );
+    }
+
+    #add-cart {
+      @include buttons.button(
+        colors.$color--navy,
+        colors.$color--red,
+        40%,
+        0.8rem
+      );
+    }
+  }
+}

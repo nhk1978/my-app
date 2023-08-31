@@ -1,0 +1,35 @@
+@use "../variables/colors";
+@use "../variables/border";
+
+.form__wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 70vh;
+  align-items: center;
+  background: colors.$color--white;
+  justify-content: center;
+
+  .page__header {
+    text-align: center;
+  }
+
+  .form {
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+
+    &__section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0.5rem 0;
+
+      input {
+        width: 20vw;
+        padding: 0.3rem;
+        border-radius: border.$border-radius;
+      }
+    }
+  }
+}

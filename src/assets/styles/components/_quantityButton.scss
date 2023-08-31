@@ -1,0 +1,27 @@
+@use "../mixins/buttons";
+@use "../variables/colors";
+
+.item-quantity__button {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+
+  input {
+    width: 4rem;
+    overflow-wrap: break-word;
+    text-align: center;
+    margin: 0 1rem;
+  }
+
+  button {
+    @include buttons.button(
+      colors.$color--blue,
+      colors.$color--grey,
+      fit-content,
+      1rem
+    );
+    border-radius: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+}

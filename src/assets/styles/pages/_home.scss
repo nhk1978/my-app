@@ -1,0 +1,52 @@
+@use "../variables/colors";
+@use "../variables/border";
+@use "../mixins/buttons";
+
+.home {
+  display: flex;
+  margin: 3rem;
+  align-items: center;
+  height: 50vh;
+
+  &__text {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-right: 2rem;
+
+    &__sub-header {
+      font-size: 2rem;
+    }
+
+    &__header {
+      font-size: 5rem;
+      color: colors.$color--navy;
+    }
+
+    &__description {
+      font-size: 1.3rem;
+      font-style: italic;
+    }
+
+    &__call-to-action {
+      @include buttons.button(
+        colors.$color--navy,
+        colors.$color--red,
+        fit-content,
+        1.5rem
+      );
+      padding: 0.5rem 2rem;
+
+      i {
+        margin-left: 1rem;
+      }
+    }
+  }
+
+  &__hero-banner {
+    img {
+      border-radius: 20px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.header{
+    background-color: rgb(25, 20, 24);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
+.headerInputContainer{
+    flex-grow: 1;
+    display: flex;
+}
+.headerInput{
+    outline: none;
+    padding: 7px;
+    margin-left: 10px;
+    flex: 1;
+}
+.headerText{
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+.headerBottom{
+    background-color: #123456;
+    padding: 5px;
+    height: 30px;
+    display: flex;
+    gap: 20px;
+}
+.headerBottomText{
+    color: white;
+    padding-top: 5px;
+    cursor: pointer;
+}
+.image{
+    left: 10px;
+    
+}

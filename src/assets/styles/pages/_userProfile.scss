@@ -1,0 +1,25 @@
+@use "../variables/colors";
+
+.user-profile {
+  width: 100vw;
+  margin: 0 2rem;
+  height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  &__section {
+    display: flex;
+    justify-content: flex-start;
+
+    img {
+      width: 100px;
+    }
+
+    h3,
+    button {
+      margin-right: 1rem;
+    }
+  }
+}

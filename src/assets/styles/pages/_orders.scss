@@ -1,0 +1,21 @@
+@use "../variables/colors";
+@use "../variables/border";
+
+.order-management {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: center;
+    &__item {
+        background-color: colors.$color--white;
+        width: fit-content;
+        padding: 1em;
+        &__property {
+            h4 {
+            }
+
+            p {
+            }
+        }
+    }
+}
