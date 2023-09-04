@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User, NewUser } from "../../types/User";
 // import productsReducer from "./productsReducer";
 import axios, { AxiosError } from "axios";
@@ -51,6 +51,8 @@ export const fetchAllUsers = createAsyncThunk(
     }
 )
 
+
+
 export const authenticate = createAsyncThunk(
     "authenticate",
     async (access_token: string) => {
@@ -62,6 +64,23 @@ export const authenticate = createAsyncThunk(
                 }
             })
             return authentication.data
+        }
+        catch (e) {
+            const error = e as AxiosError
+            return error
+        }
+    }
+)
+
+export const logout = createAction('logout');
+
+export const createNewUser = createAsyncThunk(
+    "createNewUser",
+    async (user: NewUser) => {
+        try {
+            const createUserReponse = await axiosInstance.post("users",
+            { ...user })
+            return createUserReponse.data as User
         }
         catch (e) {
             const error = e as AxiosError
@@ -106,9 +125,7 @@ export const getUser = createAsyncThunk("getUser", async (id: number) => {
 export const createUser = createAsyncThunk(
     "createNewUser",
     async ({ file, user }: { file: File | null, user: NewUser }) => {
-        // async ({file, user} : {file: File, user: NewUser}) => {
         try {
-            // const resultFile = await axios.post("https://api.escuelajs.co/api/v1/files/upload", { file: user.file })
             if (file) {
                 const resultFile = await axiosInstance.post(
                     "files/upload",
@@ -118,8 +135,7 @@ export const createUser = createAsyncThunk(
                     }
                 );
                 if (resultFile) {
-                    user.avatar = resultFile.data?.location
-                    // console.log("user reducer: " + JSON.stringify(user))                                  
+                    user.avatar = resultFile.data?.location                                 
                 }
                 else {
                     console.error("Error creating user");
@@ -274,9 +290,19 @@ const usersSlice = createSlice({
                 state.loading = false;
             })
 
-            .addCase(createUser.fulfilled, (state, action) => {
-                // state.pending = false; // Set the pending state back to false
-                if (action.payload) state.users.push(action.payload); // Update the state with the resolved data
+            .addCase(createNewUser.fulfilled, (state, action) => {
+                if(action.payload instanceof AxiosError){
+                    state.error = action.payload.message;
+                } else{
+                    state.users.push(action.payload);
+                }
+                state.loading = false;
+            })
+            .addCase(createNewUser.pending, (state, action) => {                
+                state.loading = true;                
+            })
+            .addCase(createNewUser.rejected, (state, action) => {                
+                state.error = "Can not create new user";                
             })
 
     }

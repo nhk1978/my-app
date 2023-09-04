@@ -13,8 +13,8 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>();
-  const { users } = useAppSelector((state) => state.users);
+  } = useForm<NewUser>();
+  const { users } = useAppSelector((state) => state.usersReducer);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const RegisterForm = () => {
       return;
     }
     const newUser = { ...data };
+    console.log("user: "+ JSON.stringify(newUser))
     dispatch(createNewUser(newUser)).then(() => toast.success("User has been created")).catch((error) => {
       console.error(error)
       toast.error("Failed to create new user")
@@ -37,27 +38,27 @@ const RegisterForm = () => {
       <div className="form__group">
         <input
           type="text"
-          placeholder="Enter your first name"
-          {...register("firstName", { required: true })}
+          placeholder="Full name"
+          {...register("name", { required: true })}
         />
-        {errors.firstName && (
+        {errors.name && (
           <span className="form--error">This field is required!</span>
         )}
       </div>
-      <div className="form__group">
+      {/* <div className="form__group">
         <input
           type="text"
-          placeholder="Enter your last name"
+          placeholder="Last name"
           {...register("lastName", { required: true })}
         />
         {errors.lastName && (
           <span className="form--error">This field is required!</span>
         )}
-      </div>
+      </div> */}
       <div className="form__group">
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="Email"
           {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
         />
         {errors.email && (
@@ -69,7 +70,7 @@ const RegisterForm = () => {
       <div className="form__group">
         <input
           type="text"
-          placeholder="Enter your phone number"
+          placeholder="Phone number"
           {...register("phoneNumber")}
         />
         {errors.email && (
@@ -81,7 +82,7 @@ const RegisterForm = () => {
       <div className="form__group">
         <input
           type="text"
-          placeholder="Enter your address"
+          placeholder="Address"
           {...register("address")}
         />
         {errors.email && (
@@ -94,7 +95,7 @@ const RegisterForm = () => {
         <input
           minLength={6}
           type="password"
-          placeholder="Enter your password"
+          placeholder="Password"
           {...register("password", { required: true, minLength: 6 })}
         />
         {errors.password && (
@@ -106,7 +107,7 @@ const RegisterForm = () => {
       <div className="form__group">
         <input
           type="url"
-          placeholder="Enter url of your photo"
+          placeholder="Avatar URL"
           {...register("avatar", { required: true, minLength: 8 })}
         />
         {errors.avatar && (

@@ -14,7 +14,7 @@
 }
 
 .full-width-button__primary {
-  @include buttons.button(colors.$color--cyan, colors.$color--blue, 100%, 1rem);
+  @include buttons.button(colors.$color--green, colors.$color--blue, 100%, 1rem);
 }
 
 .full-width-button__secondary {

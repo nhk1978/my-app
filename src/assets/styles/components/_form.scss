@@ -9,13 +9,13 @@
   width: 50vw;
   display: flex;
   flex-direction: column;
-  background: rgba($color: colors.$color--navy, $alpha: 0.4);
+  background: rgba($color: colors.$color--blue, $alpha: 0.4);
   border-radius: border.$border-radius;
 
   &__group {
     input,
     textarea {
-      width: 100%;
+      width: 95%;
       background: transparent;
       border: none;
       border-bottom: 1px solid colors.$color--grey;
@@ -34,10 +34,10 @@
 
   &__button {
     @include buttons.button(
-      colors.$color--navy,
+      colors.$color--green,
       colors.$color--grey,
-      fit-content,
-      1rem
+      justify-content,
+      1.5rem
     );
     margin-top: 1rem;
   }

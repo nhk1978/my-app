@@ -40,9 +40,7 @@ const Login = () => {
                 setLoginString(localStorage.getItem("loginUser"))
                 setLoginUser(loginString && loginString !=='' ? JSON.parse(loginString) : null)
                 console.log("user: "+ JSON.stringify(loginUser))
-                // localStorage.setItem("loginUser",JSON.stringify(loginUser))
-                // loginUser = action.payload as User
-                // navigate("/profile") // Redirect to profile page
+                
             } else
                 setError('Login Error: ' + action.payload + '. Please login again');
         })
@@ -55,12 +53,13 @@ const Login = () => {
         <div style={{marginTop:100}}>
             {
                 loginUser &&
-                <div>
+                <div className="form__wrapper">
                     <h2>Profile</h2>
-                    <button className='loginButton' onClick={handleLogout}>Logout</button>
+                    <button className='form__button' onClick={handleLogout}>Logout</button>
                     <p>Name: {loginUser ? loginUser.name : ""}</p>
                     <p>Email: {loginUser ? loginUser.email : ""}</p>
                     <img src={loginUser?.avatar} alt="" />
+                    <Link to="/">Home</Link>
                 </div>
             }
             {
@@ -87,9 +86,9 @@ const Login = () => {
                 //     <button className='loginButton' onClick={handleLogin}>Login</button>
                 // </div>
                 <div className="form__wrapper">
-                <h2 className="page__header">Login</h2>
-                <LoginForm />
-                <Link to="/register">Not have an account yet? Create one!</Link>
+                    <h2 className="page__header">Login</h2>
+                    <LoginForm />
+                    <Link to="/register">Sign-on</Link>
                 </div>
             }
         </div>

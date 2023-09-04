@@ -15,6 +15,7 @@ import Order from './pages/Order';
 import Login from './pages/Login';
 import UsersPage from './pages/UsersPage';
 import UserPage from './pages/UserPage';
+import Registration from './pages/Registration';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/register" element={<Registration />} />
         </Routes>
       </Provider>
     
