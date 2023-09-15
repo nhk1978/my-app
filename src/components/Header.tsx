@@ -7,15 +7,13 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useSelector } from 'react-redux';
 import { CartState } from '../redux/reducers/CartSlice';
 import { AppDispatch, GlobalState } from '../redux/store';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User } from '../types/User';
 import useAppDispatch from '../hooks/useAppDispatch';
-import { getCategory } from '../redux/reducers/productsReducer';
-import { Category } from '../types/Category';
 
 
 const Header = () => {
-    const cart = useSelector((state: GlobalState) => state.cartReducer.cart)
+    const cart = useSelector((state: GlobalState) => state.cart.cart)
     const loginString = localStorage.getItem("loginUser")
     const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
 
@@ -26,12 +24,14 @@ const Header = () => {
         navigate("/cart")
     }
     const handleProfile = () => {
-        navigate("/admin")
+        if(loginUser === null || loginUser.firstName === undefined)
+            navigate("/login")
+        else
+            navigate("/profile")
     }
-
     return (
         <>
-            {!loginUser || (loginUser && loginUser.role!=="admin") && <div className='header' >
+            {(loginUser && loginUser.firstName.length > 0) && <div className='header' >
                 {/* Logo */}
                 <div>
                     <img
@@ -48,15 +48,15 @@ const Header = () => {
                 </div>
                 <div >
                     <h4 className='headerText' onClick={handleProfile}>
-                        {loginUser ? 'Hello ' + loginUser.name : 'Login'}
+                        {loginUser ? 'Hello ' + loginUser.firstName +' '+ loginUser.lastName : 'Login'}
                     </h4>
                     <h4 className='headerText'>Acount & List</h4>
                 </div>
 
-                <div>
+                {/* <div>
                     <h4 className='headerText'>Returns</h4>
                     <h4 className='headerText'>& Orders</h4>
-                </div>
+                </div> */}
                 <div onClick={() => navigateToCart()}
                     style={{
                         position: "relative",
@@ -84,11 +84,11 @@ const Header = () => {
                 </div>
                 <div>
                     {/* Place and number */}
-                    <h4 className='headerText'>Vietnam</h4>
-                    <h4 className='headerText'>121212</h4>
+                    <Link className='headerText' to="/login">Logout</Link>
                 </div>
 
-            </div>}
+            </div>
+            }
             {
                 !loginUser && <div className='header' >
                     <div>
@@ -100,10 +100,7 @@ const Header = () => {
                     </div>
                     <div>
                     {/* Place and number */}
-                    <h4 className='headerText'>User</h4>
-                    <h4 className='headerText'>Product</h4>
-                    <h4 className='headerText'>Profile</h4>
-                    <h4 className='headerText'>Logout</h4>
+                    <Link className='headerText' to="/login">Login</Link>
                 </div>
                 </div>
             }

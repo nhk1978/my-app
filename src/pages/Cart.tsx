@@ -1,24 +1,29 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Cart.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { GlobalState } from '../redux/store'
+import { AppDispatch, GlobalState } from '../redux/store'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ToastContainer, toast } from 'react-toastify';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header'
 import { CartProps, Product } from '../types/Product'
+import { AddOrder, Order, OrderProduct, UpdateOrder } from '../types/Order'
 import { cleanCart, decrementQuantity, incrementQuantity, removeFromCart } from '../redux/reducers/CartSlice'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { createOrder, payOrder } from '../redux/reducers/ordersReducer';
+import useAppDispatch from '../hooks/useAppDispatch';
+// import Order from './Order';
 const Cart = () => {
-  const navigate = useNavigate()
-  const cart = useSelector((state: GlobalState) => state.cartReducer.cart)
+  const navigate = useNavigate();
+  const cart = useSelector((state: GlobalState) => state.cart.cart)
   // const [total, setTotal] = useEffect(0)
   const total = cart.map((item) => item.product.price * item.quantity).reduce((curr, prev) => curr + prev, 0)
-  const orders = [...cart]
-  const charges = 30
+  const [order, setOrder] = useState<Order|null>(null);
+  const charges = 30;
   const totalPrice = total + charges
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const handleIncrementQuantity = (item: Product) => {
     dispatch(incrementQuantity(item))
   }
@@ -28,7 +33,7 @@ const Cart = () => {
   const handleRemoveItemFromCart = (item: Product) => {
     dispatch(removeFromCart(item))
   }
-  const placeOrder = (item: CartProps[]) => {
+  const placeOrder = async (item: CartProps[]) => {
     toast.success('🦄 Order Placed!', {
       position: "top-center",
       autoClose: 5000,
@@ -39,19 +44,39 @@ const Cart = () => {
       progress: undefined,
       theme: "dark",
     });
+    const orderedProducts: OrderProduct[] = [];
+    cart.forEach(p => {
+      orderedProducts.push({productId: p.product.id, quantity: p.quantity});
+    });
+
+    const newOrder: AddOrder = {
+      orderStatus: "Pending",
+      orderProducts: orderedProducts
+    }
+
+    setOrder(await (await dispatch(createOrder(newOrder))).payload as Order);
+
+
   }
 
-  setTimeout(() => {
-    navigate("/orders", {
-      state: {
-        orders: orders,
-        totalPrice: totalPrice
-      }
-    })
-  }, 3500)
-  setTimeout(() => {
-    dispatch(cleanCart());
-  }, 4000)
+  const paymentOrder = async (item: Order) => {
+    toast.success('🦄 Order Paid!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+    
+
+    setOrder(await (await dispatch(payOrder(order?.id ? order?.id : ""))).payload as Order);
+
+
+  }
+
 
   return (
     <>
@@ -156,13 +181,23 @@ const Cart = () => {
               </div>
               <button
                 onClick={() => placeOrder(cart)}
-                className='cartRightCheckoutButton'>Place Order</button>
+                className='cartRightCheckoutButton'>Place Order
+              </button>
+              <h3>              Order status: {order ? order.orderStatus : "Not submited"}            </h3>
+              {order && <div>
+                <button
+                onClick={() => paymentOrder(order)}
+                className='cartRightCheckoutButton'>Payment Order
+              </button>
+              </div>}
             </div>
 
           </div>
 
-        )}
-
+        )
+        
+        }
+        <Link to="/">Home</Link>
 
       </div >
     </>

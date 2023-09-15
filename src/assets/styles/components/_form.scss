@@ -14,12 +14,12 @@
 
   &__group {
     input,
-    textarea {
+    textarea,
+    select {
       width: 95%;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid colors.$color--grey;
-      padding: 1rem;
+      background: white;
+      border: 1px solid colors.$color--grey;
+      padding: 0.1rem;
       margin: 0.5rem 0;
 
       &::placeholder {
@@ -33,18 +33,19 @@
   }
 
   &__button {
+    width: 90%;
     @include buttons.button(
       colors.$color--green,
       colors.$color--grey,
       justify-content,
-      1.5rem
+      1rem
     );
     margin-top: 1rem;
   }
 
   &--error {
     font-size: 0.9rem;
-    color: colors.$color--white;
+    color: colors.$color--red;
     padding: 1rem;
   }
 }

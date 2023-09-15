@@ -14,7 +14,7 @@ const RegisterForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<NewUser>();
-  const { users } = useAppSelector((state) => state.usersReducer);
+  const { users } = useAppSelector((state) => state.users);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const RegisterForm = () => {
       return;
     }
     const newUser = { ...data };
-    console.log("user: "+ JSON.stringify(newUser))
+    // console.log("user: "+ JSON.stringify(newUser))
     dispatch(createNewUser(newUser)).then(() => toast.success("User has been created")).catch((error) => {
       console.error(error)
       toast.error("Failed to create new user")
@@ -38,14 +38,14 @@ const RegisterForm = () => {
       <div className="form__group">
         <input
           type="text"
-          placeholder="Full name"
-          {...register("name", { required: true })}
+          placeholder="First name"
+          {...register("firstName", { required: true })}
         />
-        {errors.name && (
+        {errors.firstName && (
           <span className="form--error">This field is required!</span>
         )}
       </div>
-      {/* <div className="form__group">
+      {<div className="form__group">
         <input
           type="text"
           placeholder="Last name"
@@ -54,7 +54,7 @@ const RegisterForm = () => {
         {errors.lastName && (
           <span className="form--error">This field is required!</span>
         )}
-      </div> */}
+      </div>}
       <div className="form__group">
         <input
           type="email"
@@ -69,6 +69,18 @@ const RegisterForm = () => {
       </div>
       <div className="form__group">
         <input
+          type="date"
+          placeholder="Date of Birth"
+          {...register("dateOfBirth", { required: true})}
+        />
+        {errors.dateOfBirth && (
+          <span className="form--error">
+            This field is required to put a valid date!
+          </span>
+        )}
+      </div>
+      {/* <div className="form__group">
+        <input
           type="text"
           placeholder="Phone number"
           {...register("phoneNumber")}
@@ -78,8 +90,8 @@ const RegisterForm = () => {
             This field is required to put a valid email!
           </span>
         )}
-      </div>
-      <div className="form__group">
+      </div> */}
+      {/* <div className="form__group">
         <input
           type="text"
           placeholder="Address"
@@ -90,7 +102,7 @@ const RegisterForm = () => {
             This field is required to put a valid email!
           </span>
         )}
-      </div>
+      </div> */}
       <div className="form__group">
         <input
           minLength={6}

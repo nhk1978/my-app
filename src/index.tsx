@@ -16,14 +16,17 @@ root.render(
   </React.StrictMode>
 ); */
 
-
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
+        <script> 
+            $.support.cors = true;
+        </script>
         <App />
       </BrowserRouter>
     </Provider>

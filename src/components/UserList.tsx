@@ -13,7 +13,7 @@ import '../index.css'
 const UserList = () => {
   const [data, setData] = useState<User[]> ([])
   // const users = useSelector((initialState: GlobalState) => initialState.usersReducer.users);
-  const loading = useSelector((initialState: GlobalState) => initialState.usersReducer.loading);
+  const loading = useSelector((initialState: GlobalState) => initialState.users.loading);
   const [sort, setSort] = useState<"asc" | "desc">("asc")
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();

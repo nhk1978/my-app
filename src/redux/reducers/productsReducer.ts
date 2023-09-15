@@ -1,20 +1,22 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { Product } from "../../types/Product";
+import { Product, UpdateIdProduct, UpdateProduct } from "../../types/Product";
 import axios, { AxiosError } from "axios";
-import { NewProduct } from "../../types/NewProduct";
+import { AddProduct } from "../../types/Product";
 
-interface ProductReducer {
-    loading: boolean
-    error: string
-    products: Product[]
-}
-
-const initialState: ProductReducer = {
+const initialState:  {
+    products: Product[];
+    selectedProduct: any;
+    filteredProducts: Product[];
+    loading: boolean;
+    error: string;
+} = {
+    products: [],
+    selectedProduct: {},
+    filteredProducts: [],
     loading: false,
     error: "",
-    products: []
-}
+};
 
 /* createSlice() returns 1 object {
     reducer, action, ...
@@ -37,79 +39,31 @@ interface FetchFilterQuery {
 }
 
 const axiosInstance = axios.create({
-    baseURL: "https://api.escuelajs.co/api/v1/"
+    baseURL: "http://localhost/api/v1/"
 })
 
-/** This function will read products from api and apply the data to the state*/
-export const fetchAllProducts__old = createAsyncThunk(
-    "fetchAllProducts__old",
-    async ({
-        offset, limit, categoryID,
-        }: FetchQuery) => {
-            // console.log("categoryID: " + categoryID)
-        try {
-            const result = await axiosInstance.get<Product[]>(
-                `products?offset=${offset}&limit=${limit}` + (categoryID===0 ? "": `&categoryId=${categoryID}`))
-            return result.data
-        } catch (e) {
-            const error = e as AxiosError
-            return error.message
-        }
-    }
-)
 
-export const fetchFilterProducts__old = createAsyncThunk(
-    "fetchFilterProducts__old",
-    async ({
-        offset, 
-        limit, 
-        categoryID,
-        priceMin,
-        priceMax,
-        order
-        }: FetchFilterQuery) => {
-            // console.log("categoryID: " + categoryID)
-        try {
-            const result = await axiosInstance.get<Product[]>(
-                `products?offset=${offset}&limit=${limit}` + 
-                (categoryID===undefined || categoryID===0 ? "": `&categoryId=${categoryID}`) +
-                (priceMin ===undefined || priceMin===-1 ? "": `&price_min=${priceMin + 1}`) + 
-                (priceMax===undefined ||  priceMax===-1 ? "": `&price_max=${priceMax}`))
-                const products: Product[] = result.data
-                return products
-            /* const sortedData: Product[] = [...products].sort((a, b) => {
-                if(order === "asc"){                
-                    return (a.price - b.price)                  
-                }else{
-                    return (b.price - a.price)
-                }     
-            })
-            return sortedData */
-        } catch (e) {
-            const error = e as AxiosError
-            return error.message
-        }
-    }
-)
 
 export const fetchAllProducts = createAsyncThunk(
     'fetchAllProducts',
-    async ({id, min,max}: { id?:number, min?:number, max?:number} = {}) => {
-      try {
+    async ({id, min,max}: { id?:string, min?:number, max?:number} = {}) => {
+    // async (  {}) => {
+      try {       
+        
         if (min !== undefined && max !== undefined && id === undefined) {
-          const result = await axiosInstance.get<Product[]>(`products/?price_min=${min}&price_max=${max}`);
+          const result = await axiosInstance.get<Product[]>(`product/?price_min=${min}&price_max=${max}`);
           return result.data
         }
         else if (min === undefined && max === undefined && id !== undefined) {
-          const result = await axiosInstance.get<Product[]>(`products/?categoryId=${id}`);
+          const result = await axiosInstance.get<Product[]>(`product/?categoryId=${id}`);
           return result.data;
         }
         else if (min !== undefined && max !== undefined && id !== undefined) {
-          const result = await axiosInstance.get<Product[]>(`products/?price_min=${min}&price_max=${max}&categoryId=${id}`);
+          const result = await axiosInstance.get<Product[]>(`product/?price_min=${min}&price_max=${max}&categoryId=${id}`);
           return result.data;
         }
         else {
-          const result = await axiosInstance.get<Product[]>("products");
+          const result = await axiosInstance.get<Product[]>("product");
           return result.data; // The returned result will be inside action.payload
         }
       } catch (e) {
@@ -119,34 +73,39 @@ export const fetchAllProducts = createAsyncThunk(
     }
 );
 
-/* const sortedData = [...data].sort((a, b) => {
-    if (sortColumn === 'category') {
-      // Sort by category name
-      return sortOrder === 'asc' ? a.category.name.localeCompare(b.category.name) : b.category.name.localeCompare(a.category.name);
-    } else if (sortColumn === 'price') {
-      // Sort by price
-      return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
-    } else {
-      return 0;
-    }
-  });
- */
-
 export const createProduct = createAsyncThunk(
     "createProduct",
-    async ({file, product}:{file: File | null, product: NewProduct}) => {
+    async ( product: AddProduct) => {
         try {
-            const resultFile = await axiosInstance.post(
-                "files/upload",
-                { file: file },
-                {
-                  headers: { "Content-Type": "multipart/form-data" },
-                }
-              );
-              product.images.push(resultFile.data?.location)
-              const result = await axiosInstance.post<Product>(
-                "products/", product)
-            console.log("Reducer new product: " + JSON.stringify(result.data))
+            const result = await axiosInstance.post<Product>(
+                "product", product,
+                {headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },}
+            );
+            // console.log("Reducer new product: " + JSON.stringify(result.data))
+            return result.data 
+        } catch (e) {
+            const error = e as AxiosError
+            if (error.response) {
+                return JSON.stringify(error.response.data)
+            }
+            return error.message
+        }
+    }
+)
+
+export const updateProduct = createAsyncThunk(
+    "updateProduct",
+    async ({id, product}: UpdateIdProduct) => {
+        try {            
+              const result = await axiosInstance.patch<Product>(
+                `product/${id}`, 
+                product,
+                {headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },});
+            // console.log("Reducer update product: " + JSON.stringify(result.data))
             return result.data 
         } catch (e) {
             const error = e as AxiosError
@@ -160,15 +119,18 @@ export const createProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
     "deleteProduct",
-    async (product: Product) => {
+    async ( id : string) => {
         try {
             const result = await axiosInstance.delete(
-                `products/${product.id}`,                
+                `product/${id}`,                   
+                {headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },}             
               );
               
             // console.log("result: " + JSON.stringify(result.data))
-            if(JSON.stringify(result) === 'true') return result.data
-            else return 'error' 
+            /* if(JSON.stringify(result) === 'true') return result.data
+            else return 'error'  */
         } catch (e) {
             const error = e as AxiosError
             if (error.response) {
@@ -179,23 +141,6 @@ export const deleteProduct = createAsyncThunk(
     }
 )
 
-export const getCategory = createAsyncThunk(
-    "getCategory",
-    async () => {
-        try {
-            const result = await axiosInstance.get(
-                `categories`,                
-              );              
-              return result.data
-        } catch (e) {
-            const error = e as AxiosError
-            if (error.response) {
-                return JSON.stringify(error.response.data)
-            }
-            return error.message
-        }
-    }
-)
 
 /* update, and delete */
 
@@ -205,17 +150,7 @@ const productsSlice = createSlice({
     reducers: {
         cleanUpProductReducer: (state) => {
             return initialState
-        },
-        /* createNewProduct: (state, action: PayloadAction<NewProduct>) => {
-            const result = createProduct(action.payload)
-            if(typeof result === "string"){
-                state.error = result
-            }else{
-                state.products.push(result)
-                
-            }
-
-        }, */
+        },       
 
     }, // list of methods to modify the state,
     extraReducers: (build) => {
@@ -235,18 +170,7 @@ const productsSlice = createSlice({
                     state.products = action.payload
                 }
             })
-            .addCase(fetchFilterProducts__old.fulfilled, (state, action) => {
-                state.loading = false
-                /* if (typeof action.payload === "string") {
-                    state.error = action.payload
-                } else {
-                    state.products = action.payload
-                } */
-                if(Array.isArray(action.payload)){
-                    state.products = action.payload
-                }
-                else state.error = action.payload
-            })
+            
             .addCase(createProduct.fulfilled, (state, action) => {
                 if (typeof action.payload === "string") {
                     state.error = action.payload
@@ -254,6 +178,27 @@ const productsSlice = createSlice({
                     state.products.push(action.payload)
                 }
                 state.loading = false
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                if (action.payload instanceof AxiosError) {
+                    state.error = action.payload.message
+                } else {
+                    const updatedProduct = action.payload as Product
+                    const products = state.products.map(prod => {
+                        if(prod.id === updatedProduct.id){
+                            return {...prod, ...updatedProduct};
+                        }
+                        return prod;
+                    });
+                    state.products = products;
+                }
+                state.loading = false
+            })
+            .addCase(updateProduct.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateProduct.rejected, (state) => {
+                state.error = "Cannot update product";
             })
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 if (JSON.stringify( action.payload) !== "true") {
@@ -264,15 +209,6 @@ const productsSlice = createSlice({
                 }         
                 state.loading = false
             })
-            .addCase(getCategory.fulfilled, (state, action) => {
-                state.loading = false
-                /* if (typeof action.payload === "string") {
-                    state.error = action.payload
-                } else {
-                    state.products = action.payload
-                } */
-            })
-            
     }
 })
 

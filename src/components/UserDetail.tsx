@@ -1,46 +1,3 @@
-/* import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { deleteUser, getUser } from "../redux/reducers/usersReducer";
-import { User } from "../types/User";
-import { AppDispatch } from "../redux/store";
-import { useParams } from "react-router-dom";
-
-
-const UserDetail = () => {  
-  const { id } = useParams();
-  const [user, setUser] = useState<User | null>(null);
-  const dispatch: AppDispatch = useDispatch();
-
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const actionResult = await dispatch(getUser( parseInt(id === undefined ? "" : id) ));
-      if (getUser.fulfilled.match(actionResult)) {
-        setUser(actionResult.payload);
-      }
-    };  
-    fetchUser();
-  }, [dispatch, id]);
-
-  
-  const handleDeleteUser = (user:User) => {
-    dispatch(deleteUser(user));
-  };  
-
-  return (
-    user && (
-      <div>
-        <p>Name: { user.name }</p>
-        <p>Email: { user.email }</p>
-        <button onClick={() => handleDeleteUser(user)}>Delete</button>
-      </div>
-      )  
-  )
-}
-
-export default UserDetail;
- */
-
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { User } from "../types/User";
@@ -63,11 +20,13 @@ const UserDetail = ({ user }: { user: User }) => {
     const userUpdate: UserUpdate = {
       id: editedUser.id,
       update: {
-        name: editedUser.name,
-        email:editedUser.email,
-        password:editedUser.password,
+        firstName: editedUser.firstName,
+        lastName: editedUser.lastName,
+        // email:editedUser.email,
         avatar:editedUser.avatar,
-        role: editedUser.role
+        // password:editedUser.password,
+        // role: editedUser.role,
+        // dateOfBirth: editedUser.dateOfBirth
       }};
     try {
       // const result = await dispatch(updateOneUser({id: user.id, update: editedUser}))
@@ -107,7 +66,7 @@ const UserDetail = ({ user }: { user: User }) => {
             <input
               type="text"
               name="name"
-              value={editedUser?.name}
+              value={editedUser?.firstName}
               onChange={handleInputChange}
             />
           </label>
@@ -126,7 +85,7 @@ const UserDetail = ({ user }: { user: User }) => {
         </form>
       ) : (
         <div>
-          <p>Name: {user.name}</p>
+          <p>Name: {user.firstName}</p>
           <p>Email: {user.email}</p>
           <button onClick={handleEdit}>Edit</button>
           <button onClick={handleDelete}>Delete</button>

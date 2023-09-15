@@ -4,6 +4,7 @@ import useAppDispatch from "../hooks/useAppDispatch";
 import { login } from "../redux/reducers/usersReducer";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { User } from "../types/User";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -16,10 +17,13 @@ const LoginForm = () => {
     //localStorage.clear()
     localStorage.setItem("loginUser","")
     // console.log("user: "+ email + " pass: " +password)
-    dispatch(login({ email, password })).then((action) => toast.success("Success log in")).catch((error) => {
+    const userInfo = await dispatch(login({ email, password })).then((action) => toast.success("Success log in")).catch((error) => {
       console.error(error)
       toast.error("Failed to create new user")
     });
+    // localStorage.setItem("loginUser", JSON.stringify(userInfo as User))
+    console.log("userInfo: " +userInfo)           
+    // console.log("uloginUser: " +localStorage.getItem("loginUser"))
     navigate("/");
   };
   return (

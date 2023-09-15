@@ -16,7 +16,7 @@ const ProductDetail = ({ item }: {
   item: Product;
 }) => {
 
-  const cart = useSelector((state: GlobalState) => state.cartReducer.cart)
+  const cart = useSelector((state: GlobalState) => state.cart.cart)
 
   const dispatch = useAppDispatch()
   const handleAddtoCart = (prod: Product) => {

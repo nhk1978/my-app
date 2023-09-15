@@ -7,26 +7,17 @@ import { GlobalState } from '../redux/store';
 import { Product } from '../types/Product';
 
 export const CarouselCom = () => {
-    const products = useSelector((state: GlobalState) => state.productsReducer.products)
+    const products = useSelector((state: GlobalState) => state.products)
 
     return (
         <div>
             <Carousel swipeable={true} autoPlay={true} showArrows={true}>
-                {products &&  products.map((prod, index) => (
+                {/* {(products && products.length > 0)  &&  products.map((prod, index) => (
                     <div key={index}>
                         <img style={{width:150,height:150}} src={prod.images[0]} />
                         <p className="legend">{prod.title}</p>
                     </div>
-                ))}
-
-                {/*  <div>
-                    <img src="../assets/to.png" />
-                    <p className="legend">Legend 2</p>
-                </div>
-                <div>
-                    <img src="../assets/to.png" />
-                    <p className="legend">Legend 3</p>
-                </div>  */}
+                ))} */}
             </Carousel>
         </div>
     )

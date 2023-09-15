@@ -6,6 +6,8 @@ import { Provider } from 'react-redux'
 import store from '../redux/store';
 import { CarouselCom } from '../components/CarouselCom'
 const Home = () => {
+    localStorage.setItem("browse", "Products");
+    
     return (
         <div>
             <div className='app'>

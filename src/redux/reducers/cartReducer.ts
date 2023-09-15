@@ -1,5 +1,6 @@
 import { CartProps } from '../../types/Product';
 
+
 export const cartReducer = (state: CartProps[], action: any) => {
   const cartPropduct = action.payload
   switch (action.type) {

@@ -3,24 +3,28 @@ import { configureStore } from "@reduxjs/toolkit";
 import productsReducer from "./reducers/productsReducer";
 import usersReducer from "./reducers/usersReducer";
 import cartReducer from "./reducers/CartSlice";
-import favReducer from "./reducers/favReducer";
+import categoriesReducer from "./reducers/ordersReducer";
+import ordersReducer from "./reducers/ordersReducer";
+// import favReducer from "./reducers/favReducer";
 
 const favData = localStorage.getItem("fav");
-const initialState = favData ? JSON.parse(favData) : [];
+// const initialState = favData ? JSON.parse(favData) : [];
 const cartData = localStorage.getItem("cart")
-const cartInitialState = (cartData === null || cartData === undefined || cartData.length === 0) ? [] : JSON.parse(cartData);
+// const cartInitialState = (cartData === null || cartData === undefined || cartData.length === 0) ? [] : JSON.parse(cartData);
 const prodData = localStorage.getItem("products")
-const prodInitialState = (prodData === null || prodData === undefined || prodData.length === 0) ? [] : JSON.parse(prodData);
+// const prodInitialState = (prodData === null || prodData === undefined || prodData.length === 0) ? [] : JSON.parse(prodData);
 
 const store = configureStore({
     reducer: {
-        productsReducer,
-        usersReducer,
-        favReducer,
-        cartReducer
+        orders: ordersReducer,
+        categories: categoriesReducer,
+        products: productsReducer,
+        users: usersReducer,
+        cart: cartReducer
     },
     preloadedState: {
-        productsReducer: {
+
+        /* productsReducer: {
             loading: false,
             error: "",
             products: prodInitialState
@@ -29,16 +33,15 @@ const store = configureStore({
             loading: false,
             error: "",
             users: []
-        },
-        favReducer: initialState,
-        cartReducer: {
+        }, */
+        /* cartReducer: {
             cart: cartInitialState,
             loading: false,
             error: ""
-        }
+        } */
     }
 })
-store.subscribe(() => {
+/* store.subscribe(() => {
     localStorage.setItem("fav", JSON.stringify(store.getState().favReducer))
 })
 store.subscribe(() => {
@@ -46,7 +49,7 @@ store.subscribe(() => {
 });
 store.subscribe(() => {
     localStorage.setItem("products", JSON.stringify(store.getState().productsReducer.products));
-});
+}); */
 
 // store.getState : return the whole global state value
 

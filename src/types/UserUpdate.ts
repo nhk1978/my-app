@@ -1,6 +1,6 @@
-import { User } from "./User";
+import { UpdateUser } from "./User";
 
 export interface UserUpdate{
-    id: number,
-    update: Omit<User, "id">
+    id: string,
+    update: Omit<UpdateUser, "id">
 }

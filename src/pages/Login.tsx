@@ -1,13 +1,14 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect, useMemo, createContext, useContext } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import '../assets/styles/styles.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { login } from '../redux/reducers/usersReducer';
+import { login, logout } from '../redux/reducers/usersReducer';
 import { User } from '../types/User';
 import useAppDispatch from '../hooks/useAppDispatch';
 import LoginForm from "../components/LoginForm";
+import ProfileForm from '../components/ProfileForm';
 
 
 const Login = () => {
@@ -15,76 +16,37 @@ const Login = () => {
     const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [profile, setProfile] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [profile, setProfile] = useState<User | null>(null);
+    // const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch: AppDispatch = useAppDispatch();
-    //   const [loginUser, setLoginUser] = useState<User | null>(null)
-    // const { accessToken, refreshToken, setAccessToken, setRefreshToken } = useContext(AuthContext);
-
-    const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value);
-    };
-
-    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
-
-    const handleLogin = async (event: FormEvent) => {
-        //localStorage.clear()
-        localStorage.setItem("loginUser","")
-        console.log("user: "+ email + " pass: " +password)
-        dispatch(login({ email, password })).then((action) => {
-            if (action.payload && typeof action.payload !== "string") {
-                setLoginString(localStorage.getItem("loginUser"))
-                setLoginUser(loginString && loginString !=='' ? JSON.parse(loginString) : null)
-                console.log("user: "+ JSON.stringify(loginUser))
-                
-            } else
-                setError('Login Error: ' + action.payload + '. Please login again');
-        })
-    };
+    
     const handleLogout = () => {
-        localStorage.setItem("loginUser","")
+        dispatch(logout())
+        localStorage.remove("loginUser")
+        navigate("/login")
     }
+
+    useEffect(() => {
+        if (loginUser && loginUser.firstName !== undefined) {
+          // User is logged in, you can clear user data and logout here
+          localStorage.removeItem("loginUser"); // Remove user data from storage
+          dispatch(logout()); // Dispatch the logout action from your Redux slice
+          setLoginUser(null); // Reset the loginUser state to null
+        }
+      }, [loginUser, dispatch]);
 
     return (
         <div style={{marginTop:100}}>
+            {/* {
+                (loginUser !== null && loginUser.firstName !== undefined) &&
+                <ProfileForm />
+               
+            } */}
             {
-                loginUser &&
-                <div className="form__wrapper">
-                    <h2>Profile</h2>
-                    <button className='form__button' onClick={handleLogout}>Logout</button>
-                    <p>Name: {loginUser ? loginUser.name : ""}</p>
-                    <p>Email: {loginUser ? loginUser.email : ""}</p>
-                    <img src={loginUser?.avatar} alt="" />
-                    <Link to="/">Home</Link>
-                </div>
-            }
-            {
-                !loginUser &&
-                // <div  className='loginContainer'>
-                //     <div className='loginDiv'>
-                //         <h2>Login Page</h2>
-                //         <label className='formLabel'>Username:</label>
-                //         <input className='formControl'
-                //             type="text"
-                //             value={email}
-                //             onChange={handleUsernameChange}
-                //         />
-                //     </div>
-                //     <div className='loginDiv'>
-                //         <label className='formLabel'>Password:</label>
-                //         <input className='formControl'
-                //             type="password"
-                //             value={password}
-                //             onChange={handlePasswordChange}
-                //         />
-                //     </div>
-                //     {error && <div>{error}</div>}
-                //     <button className='loginButton' onClick={handleLogin}>Login</button>
-                // </div>
+                (!loginUser || loginUser.firstName === undefined) &&
+                
                 <div className="form__wrapper">
                     <h2 className="page__header">Login</h2>
                     <LoginForm />
@@ -96,4 +58,3 @@ const Login = () => {
 }
 
 export default Login;
-export { };

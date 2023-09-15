@@ -32,6 +32,7 @@ const cartSlice = createSlice({
                         description: action.payload.description,
                         images: action.payload.images,
                         category: action.payload.category,
+                        inventory: action.payload.inventory
                     },
                     quantity: 1
                 }

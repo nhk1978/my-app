@@ -1,10 +1,10 @@
 import { PayloadAction, createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User, NewUser } from "../../types/User";
 // import productsReducer from "./productsReducer";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { UserUpdate } from "../../types/UserUpdate";
 // import { act } from "react-dom/test-utils";
-import { UserCredential } from "../../types/UserCredential";
+import { UserCredential, UserToken } from "../../types/UserCredential";
 // import { access } from "fs";
 
 
@@ -28,7 +28,7 @@ interface UserState {
 }
 
 const axiosInstance = axios.create({
-    baseURL: "https://api.escuelajs.co/api/v1/"
+    baseURL: "http://localhost/api/v1/"
 })
 
 interface FetchQuery {
@@ -40,11 +40,11 @@ export const fetchAllUsers = createAsyncThunk(
     async ({
         page, per_page
     }: FetchQuery) => {
-        try {
+        try {            
             const result = await axiosInstance.get<User[]>(
                 `users?page=${page}&per_page=${per_page}`)
             return result.data // returned result would be inside action.payload
-        } catch (e) {
+        }catch (e) {
             const error = e as AxiosError
             return error
         }
@@ -53,17 +53,17 @@ export const fetchAllUsers = createAsyncThunk(
 
 
 
-export const authenticate = createAsyncThunk(
-    "authenticate",
-    async (access_token: string) => {
+export const getUser = createAsyncThunk(
+    "getUser",
+    async (nameId : string) => {
         try {
-            const authentication = await axiosInstance.get<User>(
-                "auth/profile", {
+            const result = await axiosInstance.get<User>(
+                "user/"+nameId, {
                 headers: {
-                    "Authorization": `Bearer ${access_token}`
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             })
-            return authentication.data
+            return result.data
         }
         catch (e) {
             const error = e as AxiosError
@@ -78,7 +78,7 @@ export const createNewUser = createAsyncThunk(
     "createNewUser",
     async (user: NewUser) => {
         try {
-            const createUserReponse = await axiosInstance.post("users",
+            const createUserReponse = await axiosInstance.post("user",
             { ...user })
             return createUserReponse.data as User
         }
@@ -93,19 +93,41 @@ export const login = createAsyncThunk(
     "login",
     async ({ email, password }: UserCredential, { dispatch }) => {
         try {
-            const result = await axiosInstance.post<{ access_token: string }>(
-                "auth/login",
+            console.log("email: "+ email)
+            const result = await axiosInstance.post(
+                "auth",
                 {
-                    email, password
+                    'email': email, 
+                    'password': password
                 })
             if (result instanceof AxiosError) {
+                localStorage.removeItem("token");
+                localStorage.removeItem ("loginUser");
                 return result
             } else {
-                // console.log("result: "+ result)
-                localStorage.setItem("token", result.data.access_token)
-                const authentication = await dispatch(authenticate(result.data.access_token))
-                localStorage.setItem("loginUser", JSON.stringify(authentication.payload as User))
-                return authentication.payload as User
+                // console.log("result: "+ JSON.stringify(result.data))
+                                
+                localStorage.setItem('token', result.data);
+
+                // Split the token into its three parts
+                const token = JSON.stringify(result.data);
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                    throw new Error('Invalid token');
+                }
+
+                // Decode the payload (second part of the token)
+                const payload = JSON.parse(atob(parts[1]));
+
+                // Extract user ID or other user-related information
+                const nameId = payload.nameid; // Replace with the actual claim name
+
+                // console.log('User ID:', nameId);
+
+                const userInfo = await dispatch(getUser(nameId))
+                // console.log("result 2: "+ JSON.stringify(authentication))
+                localStorage.setItem("loginUser", JSON.stringify(userInfo.payload as User));
+                // return authentication.payload as User
             }
         }
         catch (e) {
@@ -116,59 +138,27 @@ export const login = createAsyncThunk(
 )
 
 
-export const getUser = createAsyncThunk("getUser", async (id: number) => {
-    const result = await axiosInstance.get(`users/${id}`);
-    return result.data as User;
-});
-
-
-export const createUser = createAsyncThunk(
-    "createNewUser",
-    async ({ file, user }: { file: File | null, user: NewUser }) => {
-        try {
-            if (file) {
-                const resultFile = await axiosInstance.post(
-                    "files/upload",
-                    { file: file },
-                    {
-                        headers: { "Content-Type": "multipart/form-data" },
-                    }
-                );
-                if (resultFile) {
-                    user.avatar = resultFile.data?.location                                 
-                }
-                else {
-                    console.error("Error creating user");
-                    return null
-                }
-            }
-            else {
-                user.avatar = ''
-            }
-            const resultUser = await axiosInstance.post(
-                "users",
-                { ...user })
-            return resultUser.data as User
-        } catch (error) {
-            console.error("Error creating user:", error);
-            throw error;
-        }
-
-        /* first call https://api.escuelajs.co/api/v1/files/upload, send along the image */
-        /* get back reponse object with location ---> image url */
-        /* call https://api.escuelajs.co/api/v1/users/ --> rest of data, with url as avatar */
-    }
-)
 
 export const updateUser = createAsyncThunk(
     "updateUser",
     async (user: UserUpdate) => {
         try {
-            console.log("user: " + JSON.stringify(user))
-            const result = await axios.put(`https://api.escuelajs.co/api/v1/users/${user.id}`, {
-                email: user.update.email,
-                name: user.update.name
-            });
+            // console.log("user: " + JSON.stringify(user));
+            // const token = localStorage.getItem("token");
+            const storedToken = localStorage.getItem('token');
+            const token = storedToken ? storedToken.replace(/"/g, '') : null;
+            const result = await axiosInstance.patch(`user/${user.id}`, 
+                {
+                    firstName: user.update.firstName,
+                    lastName: user.update.lastName,
+                    avatar: user.update.avatar
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer  ${token}`,
+                    },
+                }
+            );
             return result.data;
         } catch (error) {
             console.error("Error updating user:", error);
@@ -179,7 +169,7 @@ export const updateUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
     "deleteUser",
-    async (id: number) => {
+    async (id: string) => {
         /* first call https://api.escuelajs.co/api/v1/files/upload, send along the image */
         /* get back reponse object with location ---> image url */
         /* call https://api.escuelajs.co/api/v1/users/ --> rest of data, with url as avatar */
@@ -267,7 +257,7 @@ const usersSlice = createSlice({
                 }
                 state.loading = false
             })
-            .addCase(authenticate.fulfilled, (state, action) => {
+            .addCase(getUser.fulfilled, (state, action) => {
                 if (action.payload instanceof AxiosError) {
                     state.error = action.payload.message
                 } else {
@@ -276,8 +266,8 @@ const usersSlice = createSlice({
                 state.loading = false
             })
             .addCase(updateUser.fulfilled, (state, action) => {
-                console.log("extraReducers call updateUser")
-                console.log("Action payload:", action.payload)
+                // console.log("extraReducers call updateUser")
+                // console.log("Action payload:", action.payload)
                 if (action.payload instanceof AxiosError) {
                     state.error = action.payload.message;
                 } else {
@@ -304,6 +294,10 @@ const usersSlice = createSlice({
             .addCase(createNewUser.rejected, (state, action) => {                
                 state.error = "Can not create new user";                
             })
+            .addCase(logout, (state) => {
+                state.currentUser = undefined;
+                localStorage.removeItem('token');
+              })
 
     }
 })

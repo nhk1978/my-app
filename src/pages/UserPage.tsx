@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import UserDetail from '../components/UserDetail'
 import { useSelector } from 'react-redux'
@@ -12,12 +12,14 @@ const UserPage = () => {
 // const users = useSelector((initialState: GlobalState) => initialState.usersReducer.users);
 
   const location = useLocation();
-  const user = location.state?.user;
-  
+  // const user = location.state?.user;
+  const loginString = localStorage.getItem("loginUser")
+  const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
+
   return (
       <div>        
           <h1>User Detail Page</h1>
-          {user && <UserDetail user={user} />}
+          {loginUser && <UserDetail user={loginUser} />}
     </div>
   )
 }

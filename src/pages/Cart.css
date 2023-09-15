@@ -3,11 +3,13 @@
     flex: 1;
 }
 .cartLeft{
+    width: 800px;
     flex: 0.7;
     margin: 15px;
     padding: 10px;
 }
 .cartRight{
+    width: 600px;
     flex: 0.3;
     padding: 10px;
     margin: 10px;
