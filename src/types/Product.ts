@@ -6,7 +6,7 @@ export interface Product{
     title: string
     price: number
     description: string,
-    images: string[],
+    images: Image[],
     category: Category,
     inventory: number
 }
@@ -36,4 +36,8 @@ export interface AddProduct{
 export interface CartProps {
     product: Product
     quantity: number
-  }
+}
+
+export interface Image {
+    link: string
+}

@@ -1,12 +1,3 @@
-/* export interface User {
-    id: number
-    email: string
-    password: string
-    role: "customer" | "admin"
-    name: string
-    avatar: string
-} */
-
 export interface User {
     id: string
     email: string

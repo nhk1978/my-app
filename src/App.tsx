@@ -13,12 +13,13 @@ import store from './redux/store';
 import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Login from './pages/Login';
-import UsersPage from './pages/UsersPage';
-import UserPage from './pages/UserPage';
 import Registration from './pages/Registration';
 import Profile from './pages/Profile';
-import Product from './pages/Product';
 import Admin from './pages/Admin';
+
+const loginString = localStorage.getItem("loginUser");
+if(!loginString)
+  localStorage.setItem("loginUser","")
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/product" element={<Product />} />
+          
         </Routes>
       </Provider>
     

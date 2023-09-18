@@ -2,7 +2,7 @@ export interface Profile {
     id: number
     email: string
     password: string
-    role: "customer" | "admin"
+    role: "User" | "Admin"
     name: string
     avatar: string
 }

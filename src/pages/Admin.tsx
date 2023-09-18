@@ -3,6 +3,7 @@ import '../assets/styles/styles.scss';
 import ProductForm from "../components/ProductForm";
 import { User } from "../types/User";
 import CategoryForm from "../components/CategoryForm";
+import { Link } from "react-router-dom";
 
 const Admin = () => {
 
@@ -10,11 +11,11 @@ const Admin = () => {
     const loginString = localStorage.getItem("loginUser")
     const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (action === 'Product') {
           
         }
-      }, [action]);
+      }, [action]); */
 
 return(
 
@@ -22,6 +23,7 @@ return(
         {(!loginUser || loginUser?.role === "User") && 
                 <div> 
                     <h2>Please login as Admin role</h2>
+                    <Link to="/login">Login</Link>
                 </div>
             }
         {loginUser?.role === "Admin" && 

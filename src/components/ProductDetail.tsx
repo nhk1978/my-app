@@ -34,7 +34,7 @@ const ProductDetail = ({ item }: {
 
   return (
     <div className='productDetail'>
-      <img style={{ width: 200, height: 200, marginLeft: "auto", marginRight: "auto" }} src={item.images[0]} alt={item.title} />
+      <img style={{ width: 200, height: 200, marginLeft: "auto", marginRight: "auto" }} src={item.images[0].link} alt={item.title} />
       {/* title of product */}
       <p>{item?.title.length > 30 ? item?.title.substring(0, 30) : item?.title}</p>
       {/* description of product */}
@@ -47,8 +47,7 @@ const ProductDetail = ({ item }: {
         <button className='productItemButton' onClick={() => handleAddtoCart(item)}>Add To Cart</button>
       )
       }
-      {/* <button className='productItemButton' onClick={() => handleAddtoCart(item)}>Add To Cart</button> */}
-
+      
       {/* Buy Now Button */}
       <button className='productItemBuy' >Buy Now</button>
       {/* <Link to="/cart">Go to Cart</Link> */}

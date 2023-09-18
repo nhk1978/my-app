@@ -15,7 +15,7 @@ const Order = () => {
                 {orders.map((element: CartProps, index: number) => {
                     return (
                         <div className='orderContainer' key={index}>
-                            <img style={{ width: 140, height: 140 }} src={element.product.images[0]} alt={element.product.title} />
+                            <img style={{ width: 140, height: 140 }} src={element.product.images[0].link} alt={element.product.title} />
                             <div className='orderDescription'>
                                 <p style={{marginTop:8}}>{element.product.title}</p>
                                 <p style={{marginTop:8}}>{element.product.description.length > 60 ? element.product?.description.substring(0, 60) : element.product?.description}</p>

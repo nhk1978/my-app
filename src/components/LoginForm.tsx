@@ -11,20 +11,34 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
   
   const handleLogin = async (event: React.FormEvent) => {
     //localStorage.clear()
     localStorage.setItem("loginUser","")
     // console.log("user: "+ email + " pass: " +password)
-    const userInfo = await dispatch(login({ email, password })).then((action) => toast.success("Success log in")).catch((error) => {
-      console.error(error)
-      toast.error("Failed to create new user")
+    var result = await dispatch(login({ email, password })).then((action) => toast.success("Success log in")).catch((error) => {
+      console.error(error);
+      toast.error("Failed to login");
+      navigate("/");
+      return;
     });
-    // localStorage.setItem("loginUser", JSON.stringify(userInfo as User))
-    console.log("userInfo: " +userInfo)           
-    // console.log("uloginUser: " +localStorage.getItem("loginUser"))
-    navigate("/");
+    if(result === "error")
+    {
+      toast.error("Failed to login");
+      return;
+    }
+    
+    const loginString = localStorage.getItem("loginUser");
+    console.error(loginString);
+    if(loginString === null || loginString === ""){
+      navigate("/");
+      return;
+    }
+    const user: User = JSON.parse(loginString && loginString !=="" ? loginString : "") as User;
+    if(user?.role === "Admin"){
+      navigate("/admin");
+    }      
+    else navigate("/");
   };
   return (
     <form className="form">

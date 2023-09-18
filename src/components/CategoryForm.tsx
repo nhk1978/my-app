@@ -46,7 +46,7 @@ useEffect(() => {
       }
       await dispatch(updateCategory({id: selectedCategoryId, category: updatedCategory}));      
       fetdata();
-      setMode("Edit");      
+      setMode("");      
     }
     else if(mode === "Add"){
       // setAddedCategory({

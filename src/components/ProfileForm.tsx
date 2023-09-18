@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -15,44 +15,54 @@ const ProfileForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<NewUser>();
-  // const { users } = useAppSelector((state) => state.usersReducer);
   const [editMode, setEditMode] = useState(false);
-  // const { users } = useAppSelector((state) => state.users);
-  const loginString = localStorage.getItem("loginUser")
-  const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
-  const [editedUser, setEditedUser] = useState({ ...loginUser });
+  const loginString = localStorage.getItem("loginUser");
+  const [loginUser, setLoginUser] = useState<User | null>( null );
+  const [editedUser, setEditedUser] = useState<User | null>(null);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // console.log("login str: "+ loginString);
+    // if(loginString !== undefined)  navigate("/login");
+    if(loginString !== "")  
+    {
+        try {
+          const parsedLoginUser = loginString ? JSON.parse(loginString) : "";
+          setLoginUser(parsedLoginUser);
+          setEditedUser(parsedLoginUser);
+        } catch (error) {
+          // Handle the error if JSON parsing fails
+        //   console.error('Error parsing JSON:', error);
+        }
+    }
+    else navigate("/login");
+  }, []);
+
   const handleEdit = () => {
     setEditMode(true);
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedUser((prevState) => ({
-      ...prevState,
+    setEditedUser((prevState: User | null) => ({
+      ...prevState!,
       [name]: value,
     }));
   };
   
-  const onSubmit = (data: UpdateUser) => {    
+  const onSubmit = async (data: UpdateUser) => {    
     const updatedUser: UserUpdate = {
-      id: editedUser.id ? editedUser.id : "",
+      id: editedUser !== null && editedUser.id ? editedUser.id : "",
       update: data 
     };
     // updateUser.id = editedUser.id;
     // updatedUser.email = editedUser.email ? editedUser.email  : "";
 
     // console.log("user: "+ JSON.stringify(updatedUser))
-    const user = dispatch(updateUser(updatedUser))
-    .then(() => {
-      toast.success("User has been updated");
-      
-    })
-    .catch((error) => {
-      // console.error(error)
-      toast.error("Failed to update user")
-    });
+    const user = (await (await dispatch(updateUser(updatedUser))).payload as User);
+    localStorage.setItem("loginUser", JSON.stringify(user));
+    setEditedUser(user);
     console.log("user: "+ JSON.stringify(user));
     setEditMode(false);
     navigate("/profile");

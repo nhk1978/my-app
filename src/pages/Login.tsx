@@ -24,14 +24,14 @@ const Login = () => {
     
     const handleLogout = () => {
         dispatch(logout())
-        localStorage.remove("loginUser")
+        localStorage.setItem("loginUser","")
         navigate("/login")
     }
 
     useEffect(() => {
         if (loginUser && loginUser.firstName !== undefined) {
           // User is logged in, you can clear user data and logout here
-          localStorage.removeItem("loginUser"); // Remove user data from storage
+          localStorage.setItem("loginUser",""); 
           dispatch(logout()); // Dispatch the logout action from your Redux slice
           setLoginUser(null); // Reset the loginUser state to null
         }

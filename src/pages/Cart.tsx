@@ -19,7 +19,8 @@ const Cart = () => {
   const cart = useSelector((state: GlobalState) => state.cart.cart)
   // const [total, setTotal] = useEffect(0)
   const total = cart.map((item) => item.product.price * item.quantity).reduce((curr, prev) => curr + prev, 0)
-  const [order, setOrder] = useState<Order|null>(null);
+  const [orderStatus, setOrderStatus] = useState<string>("");
+  const [order, setOrder] = useState<Order | null>(null);
   const charges = 30;
   const totalPrice = total + charges
   // const dispatch = useDispatch();
@@ -46,15 +47,17 @@ const Cart = () => {
     });
     const orderedProducts: OrderProduct[] = [];
     cart.forEach(p => {
-      orderedProducts.push({productId: p.product.id, quantity: p.quantity});
+      orderedProducts.push({ productId: p.product.id, quantity: p.quantity });
     });
 
     const newOrder: AddOrder = {
       orderStatus: "Pending",
       orderProducts: orderedProducts
     }
+    const order = await (await dispatch(createOrder(newOrder))).payload as Order;
 
-    setOrder(await (await dispatch(createOrder(newOrder))).payload as Order);
+    setOrderStatus(order.orderStatus);
+    setOrder(order);
 
 
   }
@@ -70,10 +73,9 @@ const Cart = () => {
       progress: undefined,
       theme: "dark",
     });
-    
 
-    setOrder(await (await dispatch(payOrder(order?.id ? order?.id : ""))).payload as Order);
 
+    setOrderStatus(await (await dispatch(payOrder(order?.id ? order?.id : ""))).payload as string);
 
   }
 
@@ -100,7 +102,7 @@ const Cart = () => {
             <div className='cartContainer' key={item.product.id}>
               {/* image */}
               <div>
-                <img src={item.product.images[0]} style={{ width: 100, height: 100 }} alt={item.product.title} />
+                <img src={item.product.images[0].link} style={{ width: 100, height: 100 }} alt={item.product.title} />
               </div>
               {/* description */}
               <div className='cartDescription'>
@@ -179,23 +181,24 @@ const Cart = () => {
                   <h3>            {total + charges}            </h3>
                 </div>
               </div>
+              <h3>              Order status: {orderStatus ? orderStatus : "Not submited"}            </h3>
+
               <button
                 onClick={() => placeOrder(cart)}
                 className='cartRightCheckoutButton'>Place Order
               </button>
-              <h3>              Order status: {order ? order.orderStatus : "Not submited"}            </h3>
               {order && <div>
                 <button
-                onClick={() => paymentOrder(order)}
-                className='cartRightCheckoutButton'>Payment Order
-              </button>
+                  onClick={() => paymentOrder(order)}
+                  className='cartRightCheckoutButton'>Payment Order
+                </button>
               </div>}
             </div>
 
           </div>
 
         )
-        
+
         }
         <Link to="/">Home</Link>
 

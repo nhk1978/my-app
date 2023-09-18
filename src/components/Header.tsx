@@ -14,24 +14,38 @@ import useAppDispatch from '../hooks/useAppDispatch';
 
 const Header = () => {
     const cart = useSelector((state: GlobalState) => state.cart.cart)
-    const loginString = localStorage.getItem("loginUser")
-    const [loginUser, setLoginUser] = useState<User | null>(loginString ? JSON.parse(loginString) : null);
+    const loginString = localStorage.getItem("loginUser");
+    const [loginUser, setLoginUser] = useState<User | null>(null);
 
     const navigate = useNavigate()
-    const dispatch: AppDispatch = useAppDispatch();
+    // const dispatch: AppDispatch = useAppDispatch();
 
     const navigateToCart = () => {
         navigate("/cart")
     }
+    useEffect(() => {
+        if (loginString) {
+            try {
+              const parsedLoginUser = JSON.parse(loginString);
+              setLoginUser(parsedLoginUser);
+            } catch (error) {
+              // Handle the error if JSON parsing fails
+            //   console.error('Error parsing JSON:', error);
+            }
+          }
+    }, []);
     const handleProfile = () => {
         if(loginUser === null || loginUser.firstName === undefined)
             navigate("/login")
         else
             navigate("/profile")
     }
+
+
+
     return (
         <>
-            {(loginUser && loginUser.firstName.length > 0) && <div className='header' >
+            {(loginUser && loginUser.firstName && loginUser.firstName.length > 0) && <div className='header' >
                 {/* Logo */}
                 <div>
                     <img
@@ -90,7 +104,7 @@ const Header = () => {
             </div>
             }
             {
-                !loginUser && <div className='header' >
+                (loginUser == null || !loginUser || !(loginUser.firstName)) && <div className='header' >
                     <div>
                         <img
                             src={logo}

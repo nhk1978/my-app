@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import useAppDispatch from '../hooks/useAppDispatch'
-import { AddProduct, Product, UpdateProduct } from '../types/Product'
+import { AddProduct, Product, UpdateProduct, Image } from '../types/Product'
 import { Category } from '../types/Category'
 import { AppDispatch, GlobalState } from '../redux/store'
 import { createProduct, deleteProduct, fetchAllProducts, updateProduct } from '../redux/reducers/productsReducer'
@@ -28,7 +28,7 @@ const ProductForm = () => {
   const [newDescription, setNewDescription] = useState(selectedProduct?.description);
   const [newPrice, setNewPrice] = useState<number>(selectedProduct?.price ?? 0);
   const [newCategory, setNewCategory] = useState(selectedProduct?.category.id);
-  const [newImage, setNewImage] = useState(selectedProduct?.images[0]);
+  const [newImage, setNewImage] = useState<Image | undefined>(selectedProduct?.images[0]);
   const [newInventory, setNewInventory] = useState<number>(selectedProduct?.inventory ?? 0);
   const returnPrice = (priceString: string) => {
     let priceRange = { min: 0, max: 0 };
@@ -114,11 +114,11 @@ useEffect(() => {
         categoryId: newCategory ?? "",
         description: newDescription ?? "",
         inventory: typeof newInventory === 'number' ? newInventory : parseInt(newInventory ?? "0"),
-        images: [...(newImage ? [newImage] : [])] 
+        images: [...(newImage?.link ? [newImage.link] : [])] 
       }
       await dispatch(updateProduct({id: selectedProductId, product: updatedProduct}));
       fetdata();
-      setMode("Edit");
+      setMode("");
       
     }
     else if(mode === "Add"){
@@ -126,10 +126,10 @@ useEffect(() => {
       const newProduct : AddProduct = {  
         title: newTitle ?? "",
         price: typeof newPrice === 'number' ? newPrice : parseFloat(newPrice ?? "0"),
-        categoryId: newCategory ?? "",
+        categoryId: newCategory !==undefined ? newCategory : "",
         description: newDescription ?? "",
         inventory: typeof newInventory === 'number' ? newInventory : parseInt(newInventory ?? "0"),
-        images: [...(newImage ? [newImage] : [])] 
+        images: [...(newImage?.link ? [newImage.link] : [])] 
       };
       const returnProduct = (await dispatch(createProduct(newProduct))).payload as Product | AddProduct;
              
@@ -148,7 +148,7 @@ useEffect(() => {
     e.preventDefault();
     setNewTitle("");
     setNewCategory(categoryList[0]?.id || "");
-    setNewImage("");
+    setNewImage(undefined);
     setNewInventory(0);
     setNewPrice(0);
     setNewDescription("");
@@ -192,6 +192,7 @@ useEffect(() => {
                 <tr>
                   <th>ID</th>
                   <th> <a href="#" onClick={() => handleSortByTitle()} >Title</a></th>
+                  <th>Category</th>
                   <th>Price</th>
                   <th>Inventory</th>
                   <th>Description</th>
@@ -203,7 +204,8 @@ useEffect(() => {
                 {products.map((item: any) => (
                   <tr key={item.id}>
                     <td>{item.id}</td>
-                    <td>{item.title}</td>   
+                    <td>{item.title}</td> 
+                    <td>{categoryList.find(cate =>  {return cate.id === item.category.id})?.title}</td>
                     <td className="item__price">{item.price}</td>   
                     <td>{item.inventory}</td>                  
                     <td>{item.description}</td>
@@ -279,8 +281,8 @@ useEffect(() => {
               <div className='form__group'>
                 <label className='product-details__image'>Image:</label>
                 <input type='text'  
-                value={newImage}
-                onChange={(e) => setNewImage(e.target.value)}/>
+                value={newImage?.link}
+                onChange={(e) => setNewImage({link: e.target.value}) }/>
               </div >
               <div style={{alignSelf: "center"}}>
                 <button className="form__button" >Save</button>

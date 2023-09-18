@@ -1,4 +1,4 @@
-import { PayloadAction, createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAction, createAsyncThunk, createSlice, isDraft } from "@reduxjs/toolkit";
 import { User, NewUser } from "../../types/User";
 // import productsReducer from "./productsReducer";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -89,45 +89,50 @@ export const createNewUser = createAsyncThunk(
     }
 )
 
+export const authenticate = createAsyncThunk(
+    "authenticate",
+    async (token: string) => {
+        try {
+            const authentication = await axiosInstance.get("user/profile",{
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+            return authentication.data as User;
+        }
+        catch (e) {
+            const error = e as AxiosError
+            return error
+        }
+    }
+)
+
 export const login = createAsyncThunk(
     "login",
     async ({ email, password }: UserCredential, { dispatch }) => {
         try {
-            console.log("email: "+ email)
-            const result = await axiosInstance.post(
+            const login = await axiosInstance.post(
                 "auth",
                 {
                     'email': email, 
                     'password': password
-                })
-            if (result instanceof AxiosError) {
+                });
+            if (login.status !== 200) {
                 localStorage.removeItem("token");
-                localStorage.removeItem ("loginUser");
-                return result
+                localStorage.setItem ("loginUser","");
+                return "error";
             } else {
-                // console.log("result: "+ JSON.stringify(result.data))
-                                
-                localStorage.setItem('token', result.data);
-
+                localStorage.setItem('token', login.data);
+                localStorage.setItem('userCredential', JSON.stringify({
+                    'email': email, 
+                    'password': password
+                }));
                 // Split the token into its three parts
-                const token = JSON.stringify(result.data);
-                const parts = token.split('.');
-                if (parts.length !== 3) {
-                    throw new Error('Invalid token');
-                }
-
-                // Decode the payload (second part of the token)
-                const payload = JSON.parse(atob(parts[1]));
-
-                // Extract user ID or other user-related information
-                const nameId = payload.nameid; // Replace with the actual claim name
-
-                // console.log('User ID:', nameId);
-
-                const userInfo = await dispatch(getUser(nameId))
-                // console.log("result 2: "+ JSON.stringify(authentication))
-                localStorage.setItem("loginUser", JSON.stringify(userInfo.payload as User));
-                // return authentication.payload as User
+                const authentication = await dispatch(authenticate(login.data));
+                
+                localStorage.setItem("loginUser", JSON.stringify(authentication.payload as User));
+                
+                return authentication.payload as User;
             }
         }
         catch (e) {
@@ -143,8 +148,6 @@ export const updateUser = createAsyncThunk(
     "updateUser",
     async (user: UserUpdate) => {
         try {
-            // console.log("user: " + JSON.stringify(user));
-            // const token = localStorage.getItem("token");
             const storedToken = localStorage.getItem('token');
             const token = storedToken ? storedToken.replace(/"/g, '') : null;
             const result = await axiosInstance.patch(`user/${user.id}`, 
@@ -250,12 +253,22 @@ const usersSlice = createSlice({
                 state.error = "Cannot fetch data"
             })
             .addCase(login.fulfilled, (state, action) => {
-                if (action.payload instanceof AxiosError || typeof action.payload === "string") {
-                    state.error = action.payload.toString()
-                } else {
-                    state.currentUser = action.payload
-                }
-                state.loading = false
+                if (typeof action.payload === 'string') {
+                    state.error = action.payload;
+                  } else if (isDraft(action.payload)) {
+                    state.currentUser = action.payload;
+                  } else {
+                    // Handle other cases, if needed
+                  }
+                state.loading = false;
+            })
+            .addCase(login.rejected, (state, action) => {      
+                state.loading = false;
+                if (typeof action.payload === 'string' && action.payload !== undefined) {
+                    state.error = action.payload;
+                  } else {
+                    state.error = "Login Error"; 
+                  }
             })
             .addCase(getUser.fulfilled, (state, action) => {
                 if (action.payload instanceof AxiosError) {

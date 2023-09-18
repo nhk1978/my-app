@@ -138,7 +138,7 @@ const Products = () => {
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newValue = event.target.value;
-        console.log("newValue: " + newValue);
+        // console.log("newValue: " + newValue);
         setPrice(newValue);
     };
 

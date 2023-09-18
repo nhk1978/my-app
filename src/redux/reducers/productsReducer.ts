@@ -126,11 +126,7 @@ export const deleteProduct = createAsyncThunk(
                 {headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 },}             
-              );
-              
-            // console.log("result: " + JSON.stringify(result.data))
-            /* if(JSON.stringify(result) === 'true') return result.data
-            else return 'error'  */
+              );              
         } catch (e) {
             const error = e as AxiosError
             if (error.response) {
