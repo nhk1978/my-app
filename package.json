@@ -57,7 +57,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost",
+  "proxy": "http://172.178.59.63:8080",
   "homepage": ".",
   "devDependencies": {
     "@types/uuid": "^9.0.2"

@@ -28,7 +28,7 @@ interface UserState {
 }
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost/api/v1/"
+    baseURL: "http://172.178.59.63:8080/api/v1/"
 })
 
 interface FetchQuery {
